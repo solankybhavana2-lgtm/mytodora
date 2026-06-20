@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- Stars Canvas -->
+  <canvas id="stars-canvas"></canvas>
+
+  <!-- Shooting Stars -->
+  <div class="shooting-stars">
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+  </div>
+
+  <!-- Background Moon Glow -->
+  <div class="moon-glow"></div>
+
+  <!-- Mountain Silhouettes -->
+  <div class="mountains">
+    <svg viewBox="0 0 1440 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,300 L0,200 L80,140 L160,180 L260,100 L380,160 L480,80 L600,150 L700,60 L820,130 L940,50 L1060,120 L1160,70 L1280,130 L1380,90 L1440,110 L1440,300 Z" fill="#1a0a2e" opacity="0.8"/>
+      <path d="M0,300 L0,240 L100,180 L200,210 L320,150 L440,200 L540,140 L660,190 L760,120 L880,175 L1000,110 L1120,170 L1220,130 L1340,180 L1440,150 L1440,300 Z" fill="#120825" opacity="0.9"/>
+      <path d="M0,300 L0,270 L30,255 L50,270 L70,245 L90,270 L110,250 L140,270 L170,240 L200,265 L230,245 L260,270 L300,255 L340,270 L360,248 L390,270 L420,252 L450,270 L1050,270 L1080,252 L1110,270 L1140,248 L1170,265 L1200,245 L1230,270 L1270,250 L1300,270 L1330,255 L1360,270 L1390,248 L1420,268 L1440,255 L1440,300 Z" fill="#0d0520" opacity="1"/>
+      <polygon points="20,270 30,230 40,270" fill="#0d0520"/>
+      <polygon points="50,270 63,220 76,270" fill="#0d0520"/>
+      <polygon points="80,270 91,238 102,270" fill="#0d0520"/>
+      <polygon points="1360,270 1372,228 1384,270" fill="#0d0520"/>
+      <polygon points="1390,270 1403,235 1416,270" fill="#0d0520"/>
+    </svg>
+  </div>
+
+  <!-- Confetti Container -->
+  <div id="confetti-container"></div>
+
+  <!-- ============================================
+       APP WRAPPER — two-column layout
+       ============================================ -->
+  <div class="app-wrapper">
+
+    <!-- ============== MAIN TASK PANEL ============== -->
+    <div class="card main-card" id="app-card">
+      <div class="card-shine"></div>
+
+      <div class="title-row">
+        <h1 class="app-title">Todora</h1>
+        <button class="settings-btn" id="settings-btn" aria-label="Open theme settings" title="Customize theme">
+          🎨
+        </button>
+      </div>
+
+      <!-- Progress Section -->
+      <div class="progress-section">
+        <div class="progress-left">
+          <p class="keep-it-up">Keep it Up!</p>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progress-bar"></div>
+          </div>
+        </div>
+        <div class="progress-circle" id="progress-circle">
+          <span id="progress-text">0 / 0</span>
+        </div>
+      </div>
+
+      <!-- Input Section -->
+      <div class="input-section">
+        <input
+          type="text"
+          id="task-input"
+          class="task-input"
+          placeholder="Add a new task..."
+          aria-label="New task input"
+          maxlength="120"
+        />
+        <input type="date" id="task-due-date" class="task-date-input" aria-label="Due date" title="Due date"/>
+        <input type="time" id="task-due-time" class="task-time-input" aria-label="Due time" title="Due time"/>
+        <button class="add-btn" id="add-btn" aria-label="Add task">
+          <span>+</span>
+        </button>
+      </div>
+
+      <!-- Task List -->
+      <ul class="task-list" id="task-list" aria-label="Task list">
+        <!-- Tasks rendered by JS -->
+      </ul>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="empty-state">
+        <p>No tasks yet. Add one above!</p>
+      </div>
+    </div>
+
+    <!-- ============== REMINDERS SIDEBAR ============== -->
+    <aside class="card sidebar-card" id="sidebar-card">
+      <div class="card-shine"></div>
+
+      <!-- Illustration -->
+      <div class="sidebar-illustration" aria-hidden="true">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="80" cy="108" rx="58" ry="8" fill="rgba(0,0,0,0.18)"/>
+          <rect x="40" y="34" width="58" height="72" rx="8" fill="var(--theme-card-bg)" stroke="var(--theme-accent)" stroke-width="2"/>
+          <line x1="50" y1="50" x2="88" y2="50" stroke="var(--theme-text)" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+          <line x1="50" y1="62" x2="80" y2="62" stroke="var(--theme-text)" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+          <line x1="50" y1="74" x2="84" y2="74" stroke="var(--theme-text)" stroke-width="3" stroke-linecap="round" opacity="0.4"/>
+          <circle cx="106" cy="40" r="3" fill="var(--theme-accent)"/>
+          <path d="M108 38 L132 14" stroke="var(--theme-accent)" stroke-width="4" stroke-linecap="round"/>
+          <path d="M130 10 L138 8 L136 16 Z" fill="var(--theme-accent)"/>
+          <circle cx="34" cy="24" r="5" fill="var(--theme-progress)" opacity="0.8"/>
+          <circle cx="124" cy="92" r="4" fill="var(--theme-progress)" opacity="0.6"/>
+          <path d="M58 88 L66 96 L82 78" stroke="var(--theme-progress)" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="sidebar-title-row">
+        <h2 class="sidebar-title">Today's Reminders</h2>
+        <div class="reminder-badge" id="reminder-badge" title="Pending today">
+          🔔 <span id="badge-count">0</span>
+        </div>
+      </div>
+
+      <!-- Reminder List (auto-generated from tasks with due dates) -->
+      <ul class="reminder-list" id="reminder-list" aria-label="Reminder list"></ul>
+
+      <!-- Reminder Empty State -->
+      <div class="reminder-empty-state" id="reminder-empty-state">
+        <p>🎉 No reminders for today.<br/>Enjoy your day!</p>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ============================================
+       THEME CUSTOMIZATION PANEL
+       ============================================ -->
+  <div class="theme-overlay" id="theme-overlay"></div>
+
+  <aside class="theme-panel" id="theme-panel" aria-label="Theme customization panel">
+    <div class="theme-panel-header">
+      <h2>🎨 Customize Theme</h2>
+      <button class="close-theme-btn" id="close-theme-btn" aria-label="Close theme panel">✕</button>
+    </div>
+
+    <div class="theme-panel-body">
+
+      <p class="theme-section-label">Presets</p>
+      <div class="preset-grid" id="preset-grid">
+        <!-- Preset swatches rendered by JS -->
+      </div>
+
+      <p class="theme-section-label">Custom Colors</p>
+
+      <div class="theme-group">
+        <label for="input-accent">Accent Color</label>
+        <input type="color" id="input-accent"/>
+      </div>
+
+      <div class="theme-group">
+        <label for="input-bg-start">Background Gradient</label>
+        <div class="gradient-pickers">
+          <input type="color" id="input-bg-start" title="Gradient start"/>
+          <input type="color" id="input-bg-end" title="Gradient end"/>
+        </div>
+      </div>
+
+      <div class="theme-group">
+        <label for="input-card-bg">Card Color</label>
+        <input type="color" id="input-card-bg"/>
+      </div>
+
+      <div class="theme-group">
+        <label for="input-text">Text Color</label>
+        <input type="color" id="input-text"/>
+      </div>
+
+      <div class="theme-group">
+        <label for="input-progress">Progress Bar Color</label>
+        <input type="color" id="input-progress"/>
+      </div>
+
+      <div class="theme-group">
+        <label for="input-button">Button Color</label>
+        <input type="color" id="input-button"/>
+      </div>
+
+      <div class="theme-group">
+        <label for="input-checkbox">Checkbox Color</label>
+        <input type="color" id="input-checkbox"/>
+      </div>
+
+      <div class="theme-group">
+        <label for="input-glow">Border / Glow Color</label>
+        <input type="color" id="input-glow"/>
+      </div>
+
+      <button class="reset-theme-btn" id="reset-theme-btn">↺ Reset Theme</button>
+
+    </div>
+  </aside>
+
+  <!-- In-app toast (morning summary / fallback notifications) -->
+  <div class="app-toast" id="app-toast"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
